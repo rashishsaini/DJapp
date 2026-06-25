@@ -8,6 +8,12 @@
       <FILE id="ywoNGF" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
       <FILE id="VGYc4r" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
+      <FILE id="OqIvhU" name="DeckEQComponent.h" compile="0" resource="0"
+            file="Source/DeckEQComponent.h"/>
+      <FILE id="Qd5pGX" name="DeckEQComponent.cpp" compile="1" resource="0"
+            file="Source/DeckEQComponent.cpp"/>
+      <FILE id="M03JPp" name="EQProcessor.cpp" compile="1" resource="0" file="Source/EQProcessor.cpp"/>
+      <FILE id="gavUrz" name="EQProcessor.h" compile="0" resource="0" file="Source/EQProcessor.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>
