@@ -58,10 +58,10 @@ EQKnobUnit::EQKnobUnit(const juce::String& bandName)
     // Rotary-drag style (move mouse up/down to turn the knob)
     slider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 58, 18);
-    slider.setRange(-12.0, 12.0, 0.1);
-    slider.setValue(0.0, juce::dontSendNotification);
-    slider.setDoubleClickReturnValue(true, 0.0);   // double-click resets to 0
-    slider.setNumDecimalPlacesToDisplay(1);
+    slider.setRange(0.0, 1.0);
+    slider.setValue(0.5, juce::dontSendNotification);
+    slider.setDoubleClickReturnValue(true, 0.5);   // double-click resets to 0.5
+    slider.setNumDecimalPlacesToDisplay(3);
     addAndMakeVisible(slider);
 
     label.setText(bandName, juce::dontSendNotification);
@@ -145,7 +145,22 @@ void DeckEQComponent::resized()
 
 void DeckEQComponent::sliderValueChanged(juce::Slider* s)
 {
-    const float db = static_cast<float>(s->getValue());
+    const float knob = static_cast<float>(s->getValue());
+
+    float db;
+
+    if (knob <= 0.5f)
+    {
+        db = juce::jmap(knob,
+            0.0f, 0.5f,
+            -60.0f, 0.0f);
+    }
+    else
+    {
+        db = juce::jmap(knob,
+            0.5f, 1.0f,
+            0.0f, 12.0f);
+    }
 
     if (s == &lowUnit.slider && onLowChanged)  onLowChanged(db);
     else if (s == &midUnit.slider && onMidChanged)  onMidChanged(db);
