@@ -212,7 +212,7 @@ void MainComponent::thumbnailChanged()
 
 void MainComponent::paint (juce::Graphics& g)
 {
-    juce::Rectangle<int> thumbnailBounds (10, 160, getWidth() - 20, 40 );
+    juce::Rectangle<int> thumbnailBounds (10, 160, getWidth() - 20, 150 );
     if (thumbnail.getNumChannels()== 0)
         paintIfNoFileLoaded (g, thumbnailBounds);
     else
@@ -229,15 +229,30 @@ void MainComponent::paintIfFileLoaded (juce::Graphics& g, juce::Rectangle<int>& 
 {
     g.setColour (juce::Colours::white);
     g.fillRect (thumbnailBounds);
-    g.setColour (juce::Colours::red);
-    thumbnail.drawChannels 
+    g.setColour (juce::Colours::blue);
+    thumbnail.drawChannels
     (
         g, 
         thumbnailBounds, 
         0.0, 
         thumbnail.getTotalLength(), 
-        2.0f //vertical zoom factor
+        0.5f //vertical zoom factor
     );
+    auto audioLength = transportSource.getLengthInSeconds();
+    
+    if (audioLength > 0.0) // Protect against dividing by zero if no file is loaded
+    {
+        // Find the ratio of how far along the song is (between 0.0 and 1.0)
+        auto audioPosition = transportSource.getCurrentPosition();
+        auto playheadRatio = audioPosition / audioLength;
+        
+        // Convert that ratio into a pixel X coordinate
+        auto playheadX = thumbnailBounds.getX() + (playheadRatio * thumbnailBounds.getWidth());
+        
+        // Draw the line (e.g., a green vertical line)
+        g.setColour (juce::Colours::green);
+        g.drawVerticalLine (static_cast<int>(playheadX), thumbnailBounds.getY(), thumbnailBounds.getBottom());
+    }
 }
 
 void MainComponent::timerCallback() 
