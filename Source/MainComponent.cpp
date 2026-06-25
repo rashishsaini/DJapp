@@ -1,11 +1,12 @@
 #include "MainComponent.h"
 
 //==============================================================================
-MainComponent::MainComponent() : openButton("Open File"), state(Stopped)
+MainComponent::MainComponent() : openButton("Open File"), 
+                                 state(Stopped), 
+                                 thumbnailCache(5), 
+                                 thumbnail(512, formatManager, thumbnailCache)
 {
-    // Make sure you set the size of the component after
-    // you add any child components.
-    // Add the open button to the component
+    
     addAndMakeVisible (&openButton);
     openButton.setButtonText("Open File");
     openButton.onClick = [this] { openButtonClicked(); }; // Set the button click callback
@@ -15,18 +16,19 @@ MainComponent::MainComponent() : openButton("Open File"), state(Stopped)
     playButton.onClick = [this] { playButtonClicked(); }; // Set the button click callback
     playButton.setColour(juce::TextButton::buttonColourId, juce::Colours::green); // Set the button color to green
     playButton.setEnabled(false); // Disable the play button initially
-
+    
     addAndMakeVisible(&stopButton);
     stopButton.setButtonText("Stop");   
     stopButton.onClick = [this] { stopButtonClicked(); }; // Set the button click callback
     stopButton.setColour(juce::TextButton::buttonColourId, juce::Colours::red); // Set the button color to red
     stopButton.setEnabled(false); // Disable the stop button initially
-
+    
     setSize (800, 600);
-
+    
     formatManager.registerBasicFormats(); // Register basic audio formats (WAV, AIFF, MP3, etc.)
     transportSource.addChangeListener(this); // Add change listener to the transport source
-
+    thumbnail.addChangeListener(this); // Add change listener to the thumbnail
+    
     // Some platforms require permissions to open input channels so request that here
     if (juce::RuntimePermissions::isRequired (juce::RuntimePermissions::recordAudio)
     && ! juce::RuntimePermissions::isGranted (juce::RuntimePermissions::recordAudio))
@@ -39,11 +41,11 @@ MainComponent::MainComponent() : openButton("Open File"), state(Stopped)
         // Specify the number of input and output channels that we want to open
         setAudioChannels (0, 2);
     }
+    startTimer(40);
  }
 
 MainComponent::~MainComponent()
 {
-    // This shuts down the audio device and clears the audio source.
     shutdownAudio();
 }
 
@@ -120,6 +122,7 @@ void MainComponent::openButtonClicked()
                 auto newSource = std::make_unique<juce::AudioFormatReaderSource>(reader, true);
                 transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
                 playButton.setEnabled(true);
+                thumbnail.setSource(new juce::FileInputSource(file));
                 readerSource.reset(newSource.release());
             }
 
@@ -159,13 +162,6 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
 
 
 //==============================================================================
-void MainComponent::paint (juce::Graphics& g)
-{
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
-
-    // You can add your drawing code here!
-}
 
 void MainComponent::resized()
 {
@@ -175,15 +171,81 @@ void MainComponent::resized()
 }
 
 void MainComponent::changeListenerCallback (juce::ChangeBroadcaster* source)
+// {
+//     if (source == &transportSource)
+//     {
+//         if (transportSource.isPlaying())
+//             changeState (Playing);
+//         else if ((state == Stopping) || (state == Playing))
+//             changeState (Stopped);
+//         else if (Pausing == state)
+//             changeState (Paused);
+//     }
+// }
 {
     if (source == &transportSource)
     {
-        if (transportSource.isPlaying())
-            changeState (Playing);
-        else if ((state == Stopping) || (state == Playing))
-            changeState (Stopped);
-        else if (Pausing == state)
-            changeState (Paused);
+        transportSourceChanged();
+    }
+    else if (source == &thumbnail)
+    {
+        thumbnailChanged();
     }
 }
 
+void MainComponent::transportSourceChanged()
+{
+    if (transportSource.isPlaying())
+        changeState(Playing);
+    else if ((state == Stopping) || (state == Playing))
+        changeState(Stopped);
+    else if (Pausing == state)
+        changeState(Paused);
+}
+
+void MainComponent::thumbnailChanged()
+{
+    // This function will be called when the thumbnail has changed.
+    // You can use this to trigger a repaint or update the UI as needed.
+    repaint(); // For example, you might want to repaint the component to show the updated thumbnail.
+}
+
+void MainComponent::paint (juce::Graphics& g)
+{
+    juce::Rectangle<int> thumbnailBounds (10, 160, getWidth() - 20, 40 );
+    if (thumbnail.getNumChannels()== 0)
+        paintIfNoFileLoaded (g, thumbnailBounds);
+    else
+        paintIfFileLoaded (g, thumbnailBounds);
+}
+void MainComponent::paintIfNoFileLoaded (juce::Graphics& g, juce::Rectangle<int>& thumbnailBounds)
+{
+    g.setColour (juce::Colours::darkgrey);
+    g.fillRect (thumbnailBounds);
+    g.setColour (juce::Colours::white);
+    g.drawFittedText ("No File Loaded", thumbnailBounds, juce::Justification::centred, 1);
+}
+void MainComponent::paintIfFileLoaded (juce::Graphics& g, juce::Rectangle<int>& thumbnailBounds)
+{
+    g.setColour (juce::Colours::white);
+    g.fillRect (thumbnailBounds);
+    g.setColour (juce::Colours::red);
+    thumbnail.drawChannels 
+    (
+        g, 
+        thumbnailBounds, 
+        0.0, 
+        thumbnail.getTotalLength(), 
+        2.0f //vertical zoom factor
+    );
+}
+
+void MainComponent::timerCallback() 
+{
+    if (state == Playing)
+    {
+        // You can update the UI here, for example, to show the current playback position.
+        // For now, we'll just repaint the component to reflect any changes.
+        repaint();
+    }
+}

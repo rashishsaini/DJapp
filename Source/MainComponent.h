@@ -7,7 +7,8 @@
     your controls and content.
 */
 class MainComponent  : public juce::AudioAppComponent,
-                       public juce::ChangeListener
+                       public juce::ChangeListener,
+                       private juce::Timer
 {
 public:
     //==============================================================================
@@ -42,6 +43,12 @@ private:
 
     void changeState(TransportState newState);
 
+    void transportSourceChanged();
+    void thumbnailChanged();
+    void paintIfNoFileLoaded (juce::Graphics& g, juce::Rectangle<int>& thumbnailBounds);
+    void paintIfFileLoaded (juce::Graphics& g, juce::Rectangle<int>& thumbnailBounds);
+    void timerCallback() override;
+
     juce::TextButton openButton;
     juce::TextButton playButton;
     juce::TextButton stopButton;
@@ -52,6 +59,9 @@ private:
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
     TransportState state;
+
+    juce::AudioThumbnailCache thumbnailCache;
+    juce::AudioThumbnail thumbnail;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
