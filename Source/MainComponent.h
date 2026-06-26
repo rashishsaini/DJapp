@@ -3,6 +3,8 @@
 #include <JuceHeader.h>
 #include "EQProcessor.h"
 #include "DeckEQComponent.h"
+#include "Crossfader.h"
+#include "CrossfaderComponent.h"
 
 //==============================================================================
 /*
@@ -30,9 +32,19 @@ private:
     // Your private member variables go here...
     EQProcessor deck1EQ;
     EQProcessor deck2EQ;
+	Crossfader crossfader;
+
+   // Internal deck buffers — allocated once in prepareToPlay,
+   // never reallocated during playback
+    juce::AudioBuffer<float> deck1Buffer;
+    juce::AudioBuffer<float> deck2Buffer;
+
+    //── UI ───────────────────────────────────────────────────────
 
     DeckEQComponent deck1EQComp;
     DeckEQComponent deck2EQComp;
+
+	CrossfaderComponent crossfaderComponent;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

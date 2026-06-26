@@ -3,7 +3,8 @@
 //==============================================================================
 MainComponent::MainComponent()
     : deck1EQComp("DECK 1", juce::Colour(0xff00aaff)),  // blue
-      deck2EQComp("DECK 2", juce::Colour(0xffff5500))   // orange
+      deck2EQComp("DECK 2", juce::Colour(0xffff5500)),   // orange
+      crossfaderComponent(crossfader)
 {
     // ── Wire deck 1 knobs → DSP ──────────────────────────────────
     deck1EQComp.onLowChanged = [this](float db) { deck1EQ.setLowGainDB(db);  };
@@ -18,7 +19,9 @@ MainComponent::MainComponent()
     addAndMakeVisible(deck1EQComp);
     addAndMakeVisible(deck2EQComp);
 
-    setSize(720, 300);
+    addAndMakeVisible(crossfaderComponent);
+
+    setSize(720, 600);
 
     // Tell JUCE we want stereo in + stereo out from the audio device
     setAudioChannels(2, 2);
@@ -41,6 +44,8 @@ void MainComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate
 
     deck1EQ.prepare(spec);
     deck2EQ.prepare(spec);
+
+    crossfader.prepare(spec.sampleRate, spec.maximumBlockSize);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -68,6 +73,8 @@ void MainComponent::releaseResources()
 {
     deck1EQ.reset();
     deck2EQ.reset();
+
+	crossfader.reset();
 }
 
 //==============================================================================
@@ -85,8 +92,13 @@ void MainComponent::resized()
 {
     auto area = getLocalBounds().reduced(10);
     area.removeFromTop(38);              // space for title
+    auto crossfaderArea = area.removeFromBottom(120); // space for crossfader
 
-    const int halfW = area.getWidth() / 2;
-    deck1EQComp.setBounds(area.removeFromLeft(halfW).reduced(5));
-    deck2EQComp.setBounds(area.reduced(5));
+	auto decksArea = area;   // remaining space for the two decks   
+
+    const int halfW = decksArea.getWidth() / 2;
+    deck1EQComp.setBounds(decksArea.removeFromLeft(halfW).reduced(5));
+    deck2EQComp.setBounds(decksArea.reduced(5));
+
+    crossfaderComponent.setBounds(crossfaderArea.reduced(40,5));
 }

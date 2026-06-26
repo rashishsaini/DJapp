@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="KotPHp" name="DJapp" projectType="guiapp" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" headerPath="D:\tech_shi\DJapp\Source">
   <MAINGROUP id="htYcIE" name="DJapp">
     <GROUP id="{2ADD5481-07C6-D10F-2F46-7382C2F9164B}" name="Source">
       <FILE id="FqZ3FP" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
@@ -14,6 +14,12 @@
             file="Source/DeckEQComponent.cpp"/>
       <FILE id="M03JPp" name="EQProcessor.cpp" compile="1" resource="0" file="Source/EQProcessor.cpp"/>
       <FILE id="gavUrz" name="EQProcessor.h" compile="0" resource="0" file="Source/EQProcessor.h"/>
+      <FILE id="czgloJ" name="Crossfader.cpp" compile="1" resource="0" file="Source/Crossfader.cpp"/>
+      <FILE id="pT5u31" name="Crossfader.h" compile="0" resource="0" file="Source/Crossfader.h"/>
+      <FILE id="D55w6s" name="CrossfaderComponent.cpp" compile="1" resource="0"
+            file="Source/CrossfaderComponent.cpp"/>
+      <FILE id="eCc2Qd" name="CrossfaderComponent.h" compile="0" resource="0"
+            file="Source/CrossfaderComponent.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>
