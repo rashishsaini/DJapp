@@ -22,7 +22,25 @@ MainComponent::MainComponent() : openButton("Open File"),
     stopButton.onClick = [this] { stopButtonClicked(); }; // Set the button click callback
     stopButton.setColour(juce::TextButton::buttonColourId, juce::Colours::red); // Set the button color to red
     stopButton.setEnabled(false); // Disable the stop button initially
-    
+
+    addAndMakeVisible(&volumeSlider);
+    volumeSlider.setSliderStyle(juce::Slider::LinearHorizontal);
+    volumeSlider.setRange(0.0, 1.0, 0.01);
+    volumeSlider.setValue(0.5); // Set initial volume to 50%
+    volumeSlider.onValueChange = [this] {updateGain(); }; // Update gain when the slider value changes
+    addAndMakeVisible(&volumeLabel);
+    volumeLabel.setText("Volume", juce::dontSendNotification);
+    volumeLabel.attachToComponent(&volumeSlider, true); // Attach the label to the slider
+
+    addAndMakeVisible(&gainSlider);
+    gainSlider.setSliderStyle(juce::Slider::LinearHorizontal);
+    gainSlider.setRange(0.0, 2.0, 0.01); // Gain range from 0.0 to 2.0
+    gainSlider.setValue(1.0); // Set initial gain to 1.0 (no change)
+    gainSlider.onValueChange = [this] {updateGain(); }; // Update gain when
+    addAndMakeVisible(&gainLabel);
+    gainLabel.setText("Gain", juce::dontSendNotification);
+    gainLabel.attachToComponent(&gainSlider, true); // Attach the label to the slider
+
     setSize (800, 600);
     
     formatManager.registerBasicFormats(); // Register basic audio formats (WAV, AIFF, MP3, etc.)
@@ -168,6 +186,9 @@ void MainComponent::resized()
     openButton.setBounds (10, 10, getWidth() - 20, 40); // Position the button at the top of the component
     playButton.setBounds (10, 60, getWidth() - 20, 40); // Position the play button below the open button
     stopButton.setBounds (10, 110, getWidth() - 20, 40); // Position the stop button below the play button
+
+    volumeSlider.setBounds(80, 330, getWidth() - 90, 20); 
+    gainSlider.setBounds(80, 360, getWidth() - 90, 20);
 }
 
 void MainComponent::changeListenerCallback (juce::ChangeBroadcaster* source)
@@ -263,4 +284,12 @@ void MainComponent::timerCallback()
         // For now, we'll just repaint the component to reflect any changes.
         repaint();
     }
+}
+
+
+void MainComponent::updateGain()
+{
+    float masterVolume = volumeSlider.getValue(); // Get the value from the volume slider
+    float inputGain = gainSlider.getValue(); // Get the value from the gain slider
+    transportSource.setGain(masterVolume * inputGain); // Set the transport source gain based on both sliders
 }

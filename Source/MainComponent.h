@@ -49,6 +49,8 @@ private:
     void paintIfFileLoaded (juce::Graphics& g, juce::Rectangle<int>& thumbnailBounds);
     void timerCallback() override;
 
+    void updateGain();
+
     juce::TextButton openButton;
     juce::TextButton playButton;
     juce::TextButton stopButton;
@@ -62,6 +64,11 @@ private:
 
     juce::AudioThumbnailCache thumbnailCache;
     juce::AudioThumbnail thumbnail;
+
+    juce::Slider volumeSlider;
+    juce::Label volumeLabel;
+    juce::Slider gainSlider;
+    juce::Label gainLabel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
