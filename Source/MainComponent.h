@@ -5,6 +5,8 @@
 #include "DeckEQComponent.h"
 #include "Crossfader.h"
 #include "CrossfaderComponent.h"
+#include "CueMixer.h"
+#include "CueMixerComponent.h"
 
 //==============================================================================
 /*
@@ -33,11 +35,13 @@ private:
     EQProcessor deck1EQ;
     EQProcessor deck2EQ;
 	Crossfader crossfader;
+	CueMixer cueMixer;
 
    // Internal deck buffers — allocated once in prepareToPlay,
    // never reallocated during playback
     juce::AudioBuffer<float> deck1Buffer;
     juce::AudioBuffer<float> deck2Buffer;
+	juce::AudioBuffer<float> masterBuffer;
 
     //── UI ───────────────────────────────────────────────────────
 
@@ -45,6 +49,7 @@ private:
     DeckEQComponent deck2EQComp;
 
 	CrossfaderComponent crossfaderComponent;
+	CueMixerComponent cueMixerComponent;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

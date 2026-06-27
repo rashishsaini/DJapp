@@ -24,7 +24,10 @@ private:
 	// Index into the three-filter chain
 	enum ChainIndex { LowShelf, MidPeak, HighShelf };
 
-	using Filter = juce::dsp::IIR::Filter<float>;
+	using Filter = juce::dsp::ProcessorDuplicator<
+		juce::dsp::IIR::Filter<float>,
+		juce::dsp::IIR::Coefficients<float>>;
+
 	juce::dsp::ProcessorChain<Filter, Filter, Filter> chain;
 
 	double sampleRate = 44100.0;

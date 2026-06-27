@@ -20,6 +20,12 @@
             file="Source/CrossfaderComponent.cpp"/>
       <FILE id="eCc2Qd" name="CrossfaderComponent.h" compile="0" resource="0"
             file="Source/CrossfaderComponent.h"/>
+      <FILE id="oKvD26" name="CueMixer.cpp" compile="1" resource="0" file="Source/CueMixer.cpp"/>
+      <FILE id="tPSMuS" name="CueMixer.h" compile="0" resource="0" file="Source/CueMixer.h"/>
+      <FILE id="mJcS0u" name="CueMixerComponent.cpp" compile="1" resource="0"
+            file="Source/CueMixerComponent.cpp"/>
+      <FILE id="JitGfu" name="CueMixerComponent.h" compile="0" resource="0"
+            file="Source/CueMixerComponent.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>

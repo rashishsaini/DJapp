@@ -64,15 +64,15 @@ void EQProcessor::rebuildCoefficients()
 
     // LOW: shelf that boosts/cuts everything below 300 Hz
     // Q = 0.707 is the standard "Butterworth" smoothness
-    *chain.get<LowShelf>().coefficients =
-        *Coeffs::makeLowShelf(sampleRate, 300.0, 0.707f, loGain);
+    chain.get<LowShelf>().state =
+        Coeffs::makeLowShelf(sampleRate, 300.0, 0.707f, loGain);
 
     // MID: bell/peak centred at 1 kHz
     // Q = 0.9 gives a medium-width band — good for DJ use
-    *chain.get<MidPeak>().coefficients =
-        *Coeffs::makePeakFilter(sampleRate, 1000.0, 0.9f, miGain);
+    chain.get<MidPeak>().state =
+        Coeffs::makePeakFilter(sampleRate, 1000.0, 0.9f, miGain);
 
     // HIGH: shelf that boosts/cuts everything above 4 kHz
-    *chain.get<HighShelf>().coefficients =
-        *Coeffs::makeHighShelf(sampleRate, 4000.0, 0.707f, hiGain);
+    chain.get<HighShelf>().state =
+        Coeffs::makeHighShelf(sampleRate, 4000.0, 0.707f, hiGain);
 }
