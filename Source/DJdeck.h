@@ -7,6 +7,7 @@
     your controls and content.
 */
 class DJdeck  : public juce::Component,
+                public juce:: AudioSource,
                 public juce::ChangeListener,
                 private juce::Timer
 {
@@ -16,9 +17,9 @@ public:
     ~DJdeck() override;
 
     //==============================================================================
-    void prepareToPlay (int samplesPerBlockExpected, double sampleRate) ;
-    void getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill) ;
-    void releaseResources() ;
+    void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override;
+    void getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill) override;
+    void releaseResources() override;
 
     //==============================================================================
     void paint (juce::Graphics& g) override;
@@ -38,6 +39,7 @@ private:
     };
 
     void openButtonClicked();
+    void triggerFileChooser();
     void playButtonClicked();
     void stopButtonClicked();
 

@@ -115,9 +115,37 @@ void DJdeck::changeState(TransportState newState)
 
 void DJdeck::openButtonClicked()
 {
+    if (transportSource.isPlaying())
+    {
+        juce::AlertWindow::showOkCancelBox
+        (
+            juce::AlertWindow::WarningIcon,
+            "Track is currently playing!",
+            "Do you want to stop the current track and switch to a new song?",
+            "Yes, switch song",
+            "No, keep playing", 
+            nullptr,           
+            juce::ModalCallbackFunction::create([this](int result)
+            {
+                if (result==1)
+                {
+                    transportSource.stop();
+                    triggerFileChooser();
+                }
+
+            })
+        );
+    }
+    else
+    {
+        triggerFileChooser();
+    }
+}
+void DJdeck:: triggerFileChooser()
+{
     chooser=std::make_unique<juce::FileChooser>("Select a wave file to play...",
                                                  juce::File{},
-                                                 "*.wav");
+                                                 "*.wav;*.mp3");
     auto chooserFlags = juce::FileBrowserComponent::openMode
                       | juce::FileBrowserComponent::canSelectFiles;
     chooser->launchAsync(chooserFlags, [this](const juce::FileChooser& fc)
@@ -130,9 +158,12 @@ void DJdeck::openButtonClicked()
             {
                 auto newSource = std::make_unique<juce::AudioFormatReaderSource>(reader, true);
                 transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
+                state=Stopped;
                 playButton.setEnabled(true);
+                // playButton.setButtonText("Play");
                 thumbnail.setSource(new juce::FileInputSource(file));
-                readerSource.reset(newSource.release());
+                // readerSource.reset(newSource.release());
+                readerSource = std::move(newSource);
             }
 
         }

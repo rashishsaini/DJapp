@@ -304,6 +304,10 @@ MainComponent::MainComponent() :
     addAndMakeVisible(deckA);
     addAndMakeVisible(deckB);  
     setSize(1000, 650);
+
+    mixerSource.addInputSource(&deckA, false);
+    mixerSource.addInputSource(&deckB, false);
+
     setAudioChannels(0, 2); // No inputs, two outputs
 }
  
@@ -319,13 +323,11 @@ void MainComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate
 }
 void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
-    deckA.getNextAudioBlock(bufferToFill);
-    deckB.getNextAudioBlock(bufferToFill);
+    mixerSource.getNextAudioBlock(bufferToFill);
 }
 void MainComponent::releaseResources()
 {
-    deckA.releaseResources();
-    deckB.releaseResources();
+    mixerSource.releaseResources();
 }
 void MainComponent::paint(juce::Graphics& g)
 {

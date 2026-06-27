@@ -91,6 +91,7 @@ public:
 
 private:
     juce::AudioFormatManager formatManager;
+    juce::MixerAudioSource mixerSource;
     DJdeck deckA;
     DJdeck deckB;
 
