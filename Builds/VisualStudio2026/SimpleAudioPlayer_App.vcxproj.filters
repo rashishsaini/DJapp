@@ -679,6 +679,9 @@
     <ClCompile Include="..\..\Source\MainComponent.cpp">
       <Filter>SimpleAudioPlayer\Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\DJdeck.cpp">
+      <Filter>SimpleAudioPlayer</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.cpp">
       <Filter>JUCE Modules\juce_audio_basics\audio_play_head</Filter>
     </ClCompile>
@@ -3632,6 +3635,9 @@
   <ItemGroup>
     <ClInclude Include="..\..\Source\MainComponent.h">
       <Filter>SimpleAudioPlayer\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\DJdeck.h">
+      <Filter>SimpleAudioPlayer</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h">
       <Filter>JUCE Modules\juce_audio_basics\audio_play_head</Filter>

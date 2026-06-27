@@ -9,6 +9,8 @@
       <FILE id="kp0tFs" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
     </GROUP>
+    <FILE id="nlCo54" name="DJdeck.cpp" compile="1" resource="0" file="Source/DJdeck.cpp"/>
+    <FILE id="PtUBYm" name="DJdeck.h" compile="0" resource="0" file="Source/DJdeck.h"/>
   </MAINGROUP>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
