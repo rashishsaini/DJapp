@@ -1,4 +1,0 @@
-cmd
-"C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\Tools\VsDevCmd.bat"
-cd /d "E:\project\DJ Deck\SimpleAudioPlayer\Builds\VisualStudio2026"
-msbuild "SimpleAudioPlayer.sln" 
